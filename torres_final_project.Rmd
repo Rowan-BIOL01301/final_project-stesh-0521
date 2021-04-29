@@ -119,15 +119,20 @@ The USA had the most cleanup events.
 ### Methods
 ```{r Plot_and_Data_for_Question_3}
 total_volunteers_data<-plastics%>%
-  select(country,volunteers)%>%
+  select(country,volunteers)%>%#Selecting volunteers and countries columns
   group_by(country)%>%
-  summarize(total_volunteers=sum(volunteers))%>%
-  arrange(-total_volunteers)%>%
-  filter(country!="EMPTY")%>%
-  filter(total_volunteers>188463)%>%
-  mutate(country=ifelse(country=="Taiwan_ Republic of China (ROC)","Taiwan",country))%>%
-  mutate(country=ifelse(country=="NIGERIA","Nigeria",country))%>%
-  mutate(country=ifelse(country=="United States of America","USA",country))
+  summarize(total_volunteers=sum(volunteers))%>%#Adding up volunteer totals
+  arrange(-total_volunteers)%>%#Arranging from greatest value to least
+  filter(country!="EMPTY")%>%#Getting rid of Empty aka N/A data
+  slice(1:11)%>%#Getting top 10 countries (2 for Nigeria)
+  mutate(country=ifelse(country=="Taiwan_ Republic of China (ROC)",
+                        "Taiwan",country))%>%#Country name change
+  mutate(country=ifelse(country=="NIGERIA","Nigeria",country))%>% #Uniform name for Nigerian data
+  mutate(country=ifelse(country=="United States of America","USA",country))%>%
+   group_by(country)%>% #Need to group again to group two Nigerian data volunteers
+  summarise(total_volunteers=sum(total_volunteers))%>% #Adding up Nigerian data volunteers
+  arrange(-total_volunteers)%>% #Arrange data from greatest to least
+  view()
 
 total_volunteers_data
 
@@ -136,7 +141,9 @@ total_volunteers_data%>%
   aes(x=fct_reorder(country,total_volunteers,.desc = TRUE),
       y=total_volunteers)+
   geom_col(fill="deepskyblue4")+
-  labs(x="Country",y="Total Number of Volunteers")+
+  labs(x="Country",
+       y="Total Number of Volunteers",
+       title = "Top Ten Countries for Most Volunteers (2019-2020)")+
   theme_bw()
 ```
 
@@ -175,7 +182,8 @@ plastic_hdpe_data%>%
   aes(x=fct_reorder(country,total_hdpe,.desc = TRUE), #Ordering data in graph grom greatest to least
       y=total_hdpe)+
   geom_col(fill="royalblue4")+
-  labs(x="Country",y="Total HDPE Count",title = "Top Ten Countries with Greatest HDPE Platic Polution")+
+  labs(x="Country",y="Total HDPE Count",
+       title = "Top Ten Countries with Greatest HDPE Platic Polution (2019-2020)")+
   theme_light()
 
 ```
