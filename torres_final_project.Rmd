@@ -38,39 +38,36 @@ glimpse(plastics)
 ### Methods
 ```{r Plot_and_Data_for_Question_1}
 highest_grand_total_data<-plastics%>%
-  select(grand_total,country)%>%
+  select(grand_total,country)%>%#Selecting only the grand totals of clean up and countries
   group_by(country)%>%
-  arrange(-grand_total)%>%
-  summarize(total_poln=sum(grand_total))%>%
-  arrange(-total_poln)
-
+  arrange(-grand_total)%>%#Arranging data from greatest to least
+  summarize(total_poln=sum(grand_total))%>%#Adding up all totals of clean ups by country
+  arrange(-total_poln)%>%#Arranging data from greatest to least
+  filter(country!="EMPTY")%>%#Getting rid of Empty/NA data
+  mutate(country=ifelse(country=="Taiwan_ Republic of China (ROC)",
+                        "Taiwan",country))%>%#Country name change
+  mutate(country=ifelse(country=="ECUADOR","Ecuador",country))%>%#Country name change
+  mutate(country=ifelse(country=="NIGERIA","Nigeria",country)) %>%#Country name change
+  group_by(country) %>%
+  summarize(total_poln = sum(total_poln))%>%#Combinging 2 Nigirian data
+  arrange(-total_poln)%>%
+  slice(1:10) #Selecting Top ten data
+  
 highest_grand_total_data
 
-top_10_highest_poln_data<-
-  highest_grand_total_data%>%
-  filter(total_poln>21104)%>%
-  filter(country!="EMPTY")%>%
-  # consider using case_when
-  mutate(country=ifelse(country=="Taiwan_ Republic of China (ROC)","Taiwan",country))%>%
-  mutate(country=ifelse(country=="ECUADOR","Ecuador",country))%>%
-  mutate(country=ifelse(country=="NIGERIA","Nigeria",country)) %>%
-  group_by(country) %>%
-  summarize(total_poln = sum(total_poln))
-  
-top_10_highest_poln_data
-
-plot_quest_1<-top_10_highest_poln_data%>%
+highest_grand_total_data%>%
 ggplot()+
-  aes(x=fct_reorder(country,total_poln,.desc = TRUE),
+  aes(x=fct_reorder(country,total_poln,.desc = TRUE),#Ordering columns from greatest to least
       y=total_poln)+
   geom_col(fill="turquoise")+
   labs(x="Country",
-       y="Total Polution Cleanup")+
-  theme(axis.text.x=element_text(angle=25))+
+       y="Total Polution Cleanup",
+       title = "Top Ten Countries: Grand Total Count (2019-2020)")+
+  theme(axis.text.x=element_text(angle=45))+
   theme_minimal()
 
-print(plot_quest_1)
 ```
+
 
 ### Answer
 
@@ -159,7 +156,7 @@ Indonesia had the most volunteers.
 
 ## Question 4
 
-#### Which country had the most high density polyethylene count (hdpe) from 2019-2020?
+#### Which country had the most high density polyethylene clean up count (hdpe) from 2019-2020?
 
 ### Methods
 
