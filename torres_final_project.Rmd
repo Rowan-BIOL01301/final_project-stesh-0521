@@ -176,7 +176,7 @@ plastic_hdpe_data%>%
   aes(x=fct_reorder(country,total_hdpe,.desc = TRUE),
       y=total_hdpe)+
   geom_col(fill="royalblue4")+
-  labs(x="Country",y="Total HDPE Count")+
+  labs(x="Country",y="Total HDPE Count",title = "Top Ten Countries with Greatest HDPE Platic Polution")+
   theme_light()
 
 ```
