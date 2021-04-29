@@ -33,10 +33,10 @@ glimpse(plastics)
 
 ## Question 1
 
-#### Which country had the most plastic polution clean up?
+#### Which country had the most plastic polution clean up from 2019-2020?
 
 ### Methods
-```{r Plot and Data for Question 1}
+```{r Plot_and_Data_for_Question_1}
 highest_grand_total_data<-plastics%>%
   select(grand_total,country)%>%
   group_by(country)%>%
@@ -81,10 +81,10 @@ Taiwan had the highest amount of plastic pollution cleanup.
 
 ## Question 2
 
-#### Which country had the most cleanup events?
+#### Which country had the most cleanup events from 2019-2020?
 
 ### Methods
-```{r Plot and Data for Question 2}
+```{r Plot_and_Data_for_Question_2}
 num_event_by_country<-plastics%>%
   select(country,num_events)%>%
   group_by(country)%>%
@@ -114,10 +114,10 @@ The USA had the most cleanup events.
 
 ## Question 3
 
-#### Which country had the most volunteers?
+#### Which country had the most volunteers between 2019 and 2020?
 
 ### Methods
-```{r Plot and Data for Question 3}
+```{r Plot_and_Data_for_Question_3}
 total_volunteers_data<-plastics%>%
   select(country,volunteers)%>%
   group_by(country)%>%
@@ -129,7 +129,7 @@ total_volunteers_data<-plastics%>%
   mutate(country=ifelse(country=="NIGERIA","Nigeria",country))%>%
   mutate(country=ifelse(country=="United States of America","USA",country))
 
-tibble(total_volunteers_data)
+total_volunteers_data
 
 total_volunteers_data%>%
   ggplot()+
@@ -149,11 +149,11 @@ Indonesia had the most volunteers.
 
 ## Question 4
 
-#### Which country had the most high density polyethylene count (hdpe)?
+#### Which country had the most high density polyethylene count (hdpe) from 2019-2020?
 
 ### Methods
 
-```{r Plot and Data for Question 4}
+```{r Plot_and_Data_for_Question_4}
 plastic_hdpe_data<-plastics%>%
   select(country,hdpe)%>%
   group_by(country)%>%
@@ -165,7 +165,7 @@ plastic_hdpe_data<-plastics%>%
   mutate(country=ifelse(country=="United States of America","USA",country))
 
 
-tibble(plastic_hdpe_data)
+plastic_hdpe_data
 
 plastic_hdpe_data%>%
   ggplot()+
