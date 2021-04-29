@@ -86,22 +86,26 @@ Taiwan had the highest amount of plastic pollution cleanup.
 ### Methods
 ```{r Plot_and_Data_for_Question_2}
 num_event_by_country<-plastics%>%
-  select(country,num_events)%>%
+  select(country,num_events)%>%#Selecting country and number of events columns
   group_by(country)%>%
-  summarize(total_events=sum(num_events))%>%
-  arrange(-total_events)%>%
-  filter(total_events>6029)%>%
-  filter(total_events<80000)%>%
-  mutate(country=ifelse(country=="United States of America","USA",country))
+  summarize(total_events=sum(num_events))%>% #Summing up events per country
+  arrange(-total_events)%>%#Arrange data from greatest to least
+  filter(country!="EMPTY")%>%#Getting rid of Empty aka N/A data
+   mutate(country=ifelse(country=="NIGERIA","Nigeria",country)) %>%
+ slice(1:11)%>%#Getting top 10 countries (2 for Nigeria)
+  mutate(country=ifelse(country=="United States of America","USA",country))%>%
+   group_by(country)%>% #Need to group again to group two Nigerian data events
+  summarise(total_events=sum(total_events))%>% #Adding up Nigerian data events
+  arrange(-total_events) #Arrange data from greatest to least
 
-tibble(num_event_by_country)
+num_event_by_country
 
 num_event_by_country%>%
   ggplot()+
-  aes(x=fct_reorder(country,total_events,.desc = TRUE),
+  aes(x=fct_reorder(country,total_events,.desc = TRUE),#Ordered bars from greatest to least
       y=total_events)+
   geom_col(fill="lightseagreen")+
-  labs(x="Country",y="Total Number of Events")+
+  labs(x="Country",y="Total Number of Counting Events",title = "Top Ten Countries: Greatest Number of Counting Events (2019-2020)")+
   theme_classic()
 
 ```
@@ -131,19 +135,18 @@ total_volunteers_data<-plastics%>%
   mutate(country=ifelse(country=="United States of America","USA",country))%>%
    group_by(country)%>% #Need to group again to group two Nigerian data volunteers
   summarise(total_volunteers=sum(total_volunteers))%>% #Adding up Nigerian data volunteers
-  arrange(-total_volunteers)%>% #Arrange data from greatest to least
-  view()
+  arrange(-total_volunteers) #Arrange data from greatest to least
 
 total_volunteers_data
 
 total_volunteers_data%>%
   ggplot()+
-  aes(x=fct_reorder(country,total_volunteers,.desc = TRUE),
+  aes(x=fct_reorder(country,total_volunteers,.desc = TRUE),#Ordering bars from greatest to least
       y=total_volunteers)+
   geom_col(fill="deepskyblue4")+
   labs(x="Country",
        y="Total Number of Volunteers",
-       title = "Top Ten Countries for Most Volunteers (2019-2020)")+
+       title = "Top Ten Countries: Most Volunteers (2019-2020)")+
   theme_bw()
 ```
 
@@ -174,16 +177,15 @@ plastic_hdpe_data<-plastics%>%
   summarise(total_hdpe=sum(total_hdpe))%>% #Adding up Nigerian data hdpe
   arrange(-total_hdpe) #Arrange data from greatest to least
 
-
 plastic_hdpe_data
 
 plastic_hdpe_data%>%
   ggplot()+
-  aes(x=fct_reorder(country,total_hdpe,.desc = TRUE), #Ordering data in graph grom greatest to least
+  aes(x=fct_reorder(country,total_hdpe,.desc = TRUE), #Ordering data in graph from greatest to least
       y=total_hdpe)+
   geom_col(fill="royalblue4")+
   labs(x="Country",y="Total HDPE Count",
-       title = "Top Ten Countries with Greatest HDPE Platic Polution (2019-2020)")+
+       title = "Top Ten Countries: Greatest HDPE Plastic Cleanup (2019-2020)")+
   theme_light()
 
 ```
