@@ -160,9 +160,13 @@ plastic_hdpe_data<-plastics%>%
   summarize(total_hdpe=sum(hdpe))%>%
   arrange(-total_hdpe)%>%
   filter(country!="EMPTY")%>%
-  filter(total_hdpe>560)%>%
+   slice(1:11)%>%
   mutate(country=ifelse(country=="NIGERIA","Nigeria",country))%>%
-  mutate(country=ifelse(country=="United States of America","USA",country))
+  mutate(country=ifelse(country=="United States of America","USA",country))%>%
+  group_by(country)%>%
+  summarise(total_hdpe=sum(total_hdpe))%>%
+  arrange(-total_hdpe)%>%
+    view()
 
 
 plastic_hdpe_data
