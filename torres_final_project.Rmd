@@ -1,8 +1,11 @@
 ---
 title: "Final Project"
 subtitle: "Data Science for Biologists, Spring 2021"
-author: "Your name goes here"
-output: html_document
+author: "Esteshly Torres"
+output: 
+  html_document:
+    theme: cerulean
+    highlight: breezedark
 editor_options: 
   chunk_output_type: console
 ---
@@ -12,62 +15,168 @@ editor_options:
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, echo = TRUE, include = TRUE)
 
 # Load all libraries you use HERE:
+library(tidyverse)
 ```
 
 <br><br>
 
 ## Introduction
++ Tidy Tuesday Dataset: [Plastic Polution Dataset](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-01-26/readme.md)
 
+I chose the Tidy Tuesday dataset that debuted on 01/26/2021 because it has to do with an audit of global plastic production and the cleanup efforts. This is in an attempt to understand where the most plastic production is occurring, where it is ending up and how we as a population can make positive changes for the environment.
 ```{r read-examine-data}
-
+plastics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-01-26/plastics.csv')
+glimpse(plastics)
 ```
 
 <br><br>
 
 ## Question 1
 
-#### REPLACE TEXT WITH YOUR QUESTION. Your question should literally be a level-4 header.
+#### Which country had the most plastic polution clean up?
 
 ### Methods
+```{r Plot and Data for Question 1}
+highest_grand_total_data<-plastics%>%
+  select(grand_total,country)%>%
+  group_by(country)%>%
+  arrange(-grand_total)%>%
+  summarize(total_poln=sum(grand_total))%>%
+  arrange(-total_poln)
+
+highest_grand_total_data
+
+top_10_highest_poln_data<-
+  highest_grand_total_data%>%
+  filter(total_poln>21104)%>%
+  filter(country!="EMPTY")%>%
+  # consider using case_when
+  mutate(country=ifelse(country=="Taiwan_ Republic of China (ROC)","Taiwan",country))%>%
+  mutate(country=ifelse(country=="ECUADOR","Ecuador",country))%>%
+  mutate(country=ifelse(country=="NIGERIA","Nigeria",country)) %>%
+  group_by(country) %>%
+  summarize(total_poln = sum(total_poln))
+  
+top_10_highest_poln_data
+
+plot_quest_1<-top_10_highest_poln_data%>%
+ggplot()+
+  aes(x=fct_reorder(country,total_poln,.desc = TRUE),
+      y=total_poln)+
+  geom_col(fill="turquoise")+
+  labs(x="Country",
+       y="Total Polution Cleanup")+
+  theme(axis.text.x=element_text(angle=25))+
+  theme_minimal()
+
+print(plot_quest_1)
+```
 
 ### Answer
 
-Replace this text with your answer to your question.
+Taiwan had the highest amount of plastic pollution cleanup.
 
 
 <br><br>
 
 ## Question 2
 
-#### REPLACE TEXT WITH YOUR QUESTION. Your question should literally be a level-4 header.
+#### Which country had the most cleanup events?
 
 ### Methods
+```{r Plot and Data for Question 2}
+num_event_by_country<-plastics%>%
+  select(country,num_events)%>%
+  group_by(country)%>%
+  summarize(total_events=sum(num_events))%>%
+  arrange(-total_events)%>%
+  filter(total_events>6029)%>%
+  filter(total_events<80000)%>%
+  mutate(country=ifelse(country=="United States of America","USA",country))
+
+tibble(num_event_by_country)
+
+num_event_by_country%>%
+  ggplot()+
+  aes(x=fct_reorder(country,total_events,.desc = TRUE),
+      y=total_events)+
+  geom_col(fill="lightseagreen")+
+  labs(x="Country",y="Total Number of Events")+
+  theme_classic()
+
+```
 
 ### Answer
 
-Replace this text with your answer to your question.
+The USA had the most cleanup events.
 
 <br><br>
 
 ## Question 3
 
-#### REPLACE TEXT WITH YOUR QUESTION. Your question should literally be a level-4 header.
+#### Which country had the most volunteers?
 
 ### Methods
+```{r Plot and Data for Question 3}
+total_volunteers_data<-plastics%>%
+  select(country,volunteers)%>%
+  group_by(country)%>%
+  summarize(total_volunteers=sum(volunteers))%>%
+  arrange(-total_volunteers)%>%
+  filter(country!="EMPTY")%>%
+  filter(total_volunteers>188463)%>%
+  mutate(country=ifelse(country=="Taiwan_ Republic of China (ROC)","Taiwan",country))%>%
+  mutate(country=ifelse(country=="NIGERIA","Nigeria",country))%>%
+  mutate(country=ifelse(country=="United States of America","USA",country))
+
+tibble(total_volunteers_data)
+
+total_volunteers_data%>%
+  ggplot()+
+  aes(x=fct_reorder(country,total_volunteers,.desc = TRUE),
+      y=total_volunteers)+
+  geom_col(fill="deepskyblue4")+
+  labs(x="Country",y="Total Number of Volunteers")+
+  theme_bw()
+```
 
 ### Answer
 
-Replace this text with your answer to your question.
+Indonesia had the most volunteers.
 
 
 <br><br>
 
 ## Question 4
 
-#### REPLACE TEXT WITH YOUR QUESTION. Your question should literally be a level-4 header.
+#### Which country had the most high density polyethylene count (hdpe)?
 
 ### Methods
 
+```{r Plot and Data for Question 4}
+plastic_hdpe_data<-plastics%>%
+  select(country,hdpe)%>%
+  group_by(country)%>%
+  summarize(total_hdpe=sum(hdpe))%>%
+  arrange(-total_hdpe)%>%
+  filter(country!="EMPTY")%>%
+  filter(total_hdpe>560)%>%
+  mutate(country=ifelse(country=="NIGERIA","Nigeria",country))%>%
+  mutate(country=ifelse(country=="United States of America","USA",country))
+
+
+tibble(plastic_hdpe_data)
+
+plastic_hdpe_data%>%
+  ggplot()+
+  aes(x=fct_reorder(country,total_hdpe,.desc = TRUE),
+      y=total_hdpe)+
+  geom_col(fill="royalblue4")+
+  labs(x="Country",y="Total HDPE Count")+
+  theme_light()
+
+```
+
 ### Answer
 
-Replace this text with your answer to your question.
+Nigeria had the most hdpe plastic cleaned up.
