@@ -4,6 +4,8 @@ subtitle: "Data Science for Biologists, Spring 2021"
 author: "Esteshly Torres"
 output: 
   html_document:
+    fig_width: 8
+    fig_height: 8
     theme: cerulean
     highlight: breezedark
 editor_options: 
@@ -36,7 +38,22 @@ glimpse(plastics)
 #### Which country had the most plastic polution clean up from 2019-2020?
 
 ### Methods
+
+**The dataset has two entries for the country of Nigeria (Nigeria and NIGERIA). The difference in the data is in the year the data was collected.**
+
 ```{r Plot_and_Data_for_Question_1}
+plastics%>%
+  filter(country=="Nigeria",year!=2020) #In 2020, Nigeria was logged as NIGERIA
+
+plastics%>%
+  filter(country=="Nigeria",year!=2019)#In 2019, Nigeria was logged as Nigeria
+
+plastics%>%
+  filter(country=="NIGERIA",year!=2019)#In 2019, Nigeria was logged as Nigeria
+
+plastics%>%
+  filter(country=="NIGERIA",year!=2020)#In 2020, Nigeria was logged as NIGERIA
+
 highest_grand_total_data<-plastics%>%
   select(grand_total,country)%>%#Selecting only the grand totals of clean up and countries
   group_by(country)%>%
@@ -63,7 +80,6 @@ ggplot()+
   labs(x="Country",
        y="Total Polution Cleanup",
        title = "Top Ten Countries: Grand Total Count (2019-2020)")+
-  theme(axis.text.x=element_text(angle=45))+
   theme_minimal()
 
 ```
@@ -71,7 +87,7 @@ ggplot()+
 
 ### Answer
 
-Taiwan had the highest amount of plastic pollution cleanup.
+**Taiwan** had the highest amount of plastic pollution cleanup.
 
 
 <br><br>
@@ -109,7 +125,7 @@ num_event_by_country%>%
 
 ### Answer
 
-The USA had the most cleanup events.
+The **USA** had the most cleanup events.
 
 <br><br>
 
@@ -149,7 +165,7 @@ total_volunteers_data%>%
 
 ### Answer
 
-Indonesia had the most volunteers.
+**Indonesia** had the most volunteers.
 
 
 <br><br>
@@ -161,6 +177,7 @@ Indonesia had the most volunteers.
 ### Methods
 
 ```{r Plot_and_Data_for_Question_4}
+
 plastic_hdpe_data<-plastics%>%
   select(country,hdpe)%>% #Selecting two specific columns
   group_by(country)%>%
@@ -189,4 +206,4 @@ plastic_hdpe_data%>%
 
 ### Answer
 
-Nigeria had the most hdpe plastic cleaned up.
+**Nigeria** had the most hdpe plastic cleaned up.
