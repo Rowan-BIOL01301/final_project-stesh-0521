@@ -155,25 +155,24 @@ Indonesia had the most volunteers.
 
 ```{r Plot_and_Data_for_Question_4}
 plastic_hdpe_data<-plastics%>%
-  select(country,hdpe)%>%
+  select(country,hdpe)%>% #Selecting two specific columns
   group_by(country)%>%
-  summarize(total_hdpe=sum(hdpe))%>%
-  arrange(-total_hdpe)%>%
-  filter(country!="EMPTY")%>%
-   slice(1:11)%>%
-  mutate(country=ifelse(country=="NIGERIA","Nigeria",country))%>%
-  mutate(country=ifelse(country=="United States of America","USA",country))%>%
-  group_by(country)%>%
-  summarise(total_hdpe=sum(total_hdpe))%>%
-  arrange(-total_hdpe)%>%
-    view()
+  summarize(total_hdpe=sum(hdpe))%>% # Add up all of the hdpe totals for each country, creating new column
+  arrange(-total_hdpe)%>% #Arrange data from greatest to least
+  filter(country!="EMPTY")%>% #Getting rid of Empty aka N/A data
+   slice(1:11)%>% #Getting top 10 countries (2 for Nigeria)
+  mutate(country=ifelse(country=="NIGERIA","Nigeria",country))%>% # Uniform name for Nigerian data
+  mutate(country=ifelse(country=="United States of America","USA",country))%>% #Changing name to USA
+  group_by(country)%>% #Need to group again to group two Nigerian data hdpe
+  summarise(total_hdpe=sum(total_hdpe))%>% #Adding up Nigerian data hdpe
+  arrange(-total_hdpe) #Arrange data from greatest to least
 
 
 plastic_hdpe_data
 
 plastic_hdpe_data%>%
   ggplot()+
-  aes(x=fct_reorder(country,total_hdpe,.desc = TRUE),
+  aes(x=fct_reorder(country,total_hdpe,.desc = TRUE), #Ordering data in graph grom greatest to least
       y=total_hdpe)+
   geom_col(fill="royalblue4")+
   labs(x="Country",y="Total HDPE Count",title = "Top Ten Countries with Greatest HDPE Platic Polution")+
